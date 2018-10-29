@@ -68,7 +68,7 @@ def is_thermostat_point(point):
     ''' predicate for checking whether a point is thermostat related
         :param point: a point in dict form
         :return: True, if and only if the point is a thermostat point '''
-    components_of_name = ['STPT', 'ROOM TEMP']
+    components_of_name = ['STPT', 'STP', 'ROOM TEMP', 'RMT']
     return any(component in point['Point System Name'][0] for component in components_of_name)
 
 
@@ -96,11 +96,13 @@ def is_non_space_delimited_point(point):
 
 
 def is_hulings_point(point):
-    pass
+    hulings_prefixes = ['HU', 'BO', 'HULINGS', 'HULLINGS']
+    return any(component == point['Point System Name'][0][:len(component)] for component in hulings_prefixes)
 
 
 def is_weitz_point(point):
-    pass
+    weitz_prefixes = ['WC', 'WCC']
+    return any(component == point['Point System Name'][0][:len(component)] for component in weitz_prefixes)
 
 
 if __name__ == '__main__':
@@ -110,10 +112,11 @@ if __name__ == '__main__':
     prefixes_first_three = point_name_prefixes(points, 3)
     prefixes_dict_first_three = point_name_prefixes(points, n=3, as_dict=True)
     first_component_prefixes = point_name_prefixes(points)
+    first_component_prefixes_dict = point_name_prefixes(points, as_dict=True)
 
     thermostat_points = filter_points(points, is_thermostat_point)
-    thermostat_prefixes = point_name_prefixes(thermostat_points, 3)
-    thermostat_prefixes_dict = point_name_prefixes(thermostat_points, n=3, as_dict=True)
+    thermostat_prefixes = point_name_prefixes(thermostat_points)
+    thermostat_prefixes_dict = point_name_prefixes(thermostat_points, as_dict=True)
 
     non_dot_delimited_points = filter_points(points, is_non_dot_delimited_point)
     non_delimited_points = filter_points(points, is_non_delimited_point)
@@ -148,11 +151,11 @@ if __name__ == '__main__':
         pass  # to allow commenting out print statement above
     print()
 
-    print('========== 3-letter prefixes not present in thermostat points ==========')
-    prefix_diff_dict = {k: v for (k, v) in prefixes_dict_first_three.items() if k not in thermostat_prefixes_dict}
+    print('========== prefixes not present in thermostat points ==========')
+    prefix_diff_dict = {k: v for (k, v) in first_component_prefixes_dict.items() if k not in thermostat_prefixes_dict}
     prefix_diff_sorted = sorted(prefix_diff_dict.items(), key=lambda x: (x[1], x[0]), reverse=True)
     for prefix, count in prefix_diff_sorted:
-        # print(prefix, count)
+        print(prefix, count)
         pass  # to allow commenting out print statement above
 
     print('========== non-delimited point names ==========')
