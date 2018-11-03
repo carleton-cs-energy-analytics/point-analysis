@@ -20,10 +20,11 @@ class Point:
         self.room_floor = "unknown"
         self.room_desc = "unknown"
         self.units = "unknown"
-        self.building_tags = []
-        self.device_tags = []
-        self.room_tags = []
-        self.point_tags = []
+        self.building_type = "unknown"
+        self.device_type = "unknown"
+        self.room_type = "unknown"
+        self.point_type = "unknown"
+
 
     def set_point_name(self, name):
         self.point_name = name
@@ -76,30 +77,29 @@ class Point:
     def set_units(self, units):
         self.units = units
 
-    def set_building_tags(self, tags):
-        self.building_tags = tags
+    def set_building_type(self, tag):
+        self.building_type = tag
 
-    def get_building_tags(self):
-        return self.building_tags
+    def get_building_type(self):
+        return self.building_type
 
-    def set_device_tags(self, tags):
-        self.device_tags = tags
+    def set_room_type(self, tag):
+        self.room_type = tag
 
-    def get_device_tags(self):
-        return self.building_tags
+    def get_room_type(self):
+        return self.room_type
 
-    def set_room_tags(self, tags):
-        self.room_tags = tags
+    def set_device_type(self, tag):
+        self.device_type = tag
 
-    def get_room_tags(self):
-        return self.room_tags
+    def get_device_type(self):
+        return self.device_type
 
-    def set_point_tags(self, tags):
-        self.point_tags = tags
+    def set_point_type(self, tag):
+        self.point_type = tag
 
-    def get_point_tags(self):
-        return self.point_tags
+    def get_point_type(self):
+        return self.point_type
 
-
-
-
+    def get_tags(self):
+        return [self.building_type, self.device_type, self.room_type, self.point_type]
