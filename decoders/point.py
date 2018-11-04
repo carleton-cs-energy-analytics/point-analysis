@@ -26,6 +26,14 @@ class Point:
         self.point_type = "unknown"
 
 
+    def __iter__(self):
+        for attr, value in self.__dict__.items():
+            yield attr, value
+
+    def __str__(self):
+        return str(dict(self))
+
+
     def set_point_name(self, name):
         self.point_name = name
 
