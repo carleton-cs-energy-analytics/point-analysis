@@ -7,13 +7,19 @@
     of point objects.
 '''
 
-from decoders.evans_point_decoder import EvansPointDecoder
-from decoders.point_decoder import PointDecoder
 import json
 
+
+from decoders.evans_point_decoder import EvansPointDecoder
+from decoders.hulings_point_decoder import HulingsPointDecoder
+
 # maps building prefixes to building subclass decoders
-subClassMap = {'EV': EvansPointDecoder,
-               'EVANS': EvansPointDecoder}  # TODO add building mappings as they are discovered and implemented
+BUILDING_PREFIX_MAP = {'EV': EvansPointDecoder,
+                       'EVANS': EvansPointDecoder,
+                       'HU': HulingsPointDecoder,
+                       'BO': HulingsPointDecoder,
+                       'HULINGS': HulingsPointDecoder,
+                       'HULLINGS': HulingsPointDecoder}
 
 
 def get_point_object(name, point):
@@ -22,9 +28,9 @@ def get_point_object(name, point):
     :param point: attribute dictionary for point
     :return: Point object
     '''
-    prefix = get_prefix(name)   # get prefix of point name
-    building_decoder_class = get_building_decoder(prefix)   # class that corresponds to building mapping
-    building_decoder = building_decoder_class(point)    # instance of class
+    prefix = get_prefix(name)  # get prefix of point name
+    building_decoder_class = get_building_decoder(prefix)  # class that corresponds to building mapping
+    building_decoder = building_decoder_class(point)  # instance of class
     return building_decoder.get_point()
 
 
@@ -33,7 +39,7 @@ def get_building_decoder(prefix):
     :param prefix: prefix of point name
     :return:  name of subclass that corresponds to the building of a given point prefix
     '''
-    return subClassMap.get(prefix, PointDecoder)
+    return BUILDING_PREFIX_MAP.get(prefix, PointDecoder)
 
 
 def get_prefix(point_name):
@@ -50,15 +56,14 @@ def get_prefix(point_name):
 
 if __name__ == '__main__':
     with open('../data/points.json') as f:
-        points = json.loads(f.read())       # read point dictionary from points.json
+        points = json.loads(f.read())  # read point dictionary from points.json
 
     point_list = [get_point_object(name, point) for name, point in points.items()]  # list of point objects
 
+    print(' Number of points to decode:', len(points))
+    print(' Number of points decoded (attempted):', len(point_list))
+
+    print('================ Decoded points (attempted) ================')
     for point in point_list:
         print(str(point))
         pass
-
-
-    print(' Number of points to decode:', len(points))
-    print(' Number of points decoded (attempted):', len(point_list))
-    print('================ Decoded points (attempted) ================')

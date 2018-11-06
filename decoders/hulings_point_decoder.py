@@ -1,8 +1,8 @@
 from decoders.point_decoder import PointDecoder
-from .point import Point
+from decoders.point import Point
 
 
-class EvansPointDecoder(PointDecoder):
+class HulingsPointDecoder(PointDecoder):
 
     def __init__(self, attr_dict):
         self.point = Point(attr_dict['Point Name'][0])
@@ -19,7 +19,7 @@ class EvansPointDecoder(PointDecoder):
         return self.point
 
     def _set_building(self):
-        self.point.set_building_name("Evans")
+        self.point.set_building_name("Hulings")
 
     def _set_room(self):
         self.point.set_room_name("unknown")
