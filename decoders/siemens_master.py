@@ -9,7 +9,7 @@
 
 import json
 
-
+from decoders.point_decoder import PointDecoder
 from decoders.evans_point_decoder import EvansPointDecoder
 from decoders.hulings_point_decoder import HulingsPointDecoder
 
@@ -66,4 +66,3 @@ if __name__ == '__main__':
     print('================ Decoded points (attempted) ================')
     for point in point_list:
         print(str(point))
-        pass
