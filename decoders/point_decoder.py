@@ -2,41 +2,54 @@ from .point import Point
 
 
 class PointDecoder:
+    @staticmethod
+    def decode_point_name(attr_dict):
+        return attr_dict["Point Name"][0]
 
-    def __init__(self, attr_dict):
-        self.point = Point(attr_dict['Point Name'][0])
-        self.attr_dict = attr_dict
+    @staticmethod
+    def decode_point_desc(attr_dict):
+        return "unknown"
 
-        self._set_building()
-        self._set_device()
-        self._set_room()
-        self._set_tags()
-        self._set_point_desc()
-        self._set_units()
-    
-    def get_point(self):
-        return self.point
+    @staticmethod
+    def decode_building_name(attr_dict):
+        return "unknown"
 
-    def _set_building(self):
-        self.point.set_building_name("unknown")
+    @staticmethod
+    def decode_device_name(attr_dict):
+        return "unknown"
 
-    def _set_room(self):
-        self.point.set_room_name("unknown")
-        self.point.set_room_floor("unknown")
-        self.point.set_room_desc("unknown")
+    @staticmethod
+    def decode_device_desc(attr_dict):
+        return "unknown"
 
-    def _set_device(self):
-        self.point.set_device_name("unknown")
-        self.point.set_device_desc("unknown")
+    @staticmethod
+    def decode_room_name(attr_dict):
+        return "unknown"
 
-    def _set_units(self):
-        self.point.set_units("unknown")
+    @staticmethod
+    def decode_room_floor(attr_dict):
+        return "unknown"
 
-    def _set_tags(self):
-        self.point.set_building_type("unknown")
-        self.point.set_device_type("unknown")
-        self.point.set_room_type("unknown")
-        self.point.set_point_type("unknown")
+    @staticmethod
+    def decode_room_desc(attr_dict):
+        return "unknown"
 
-    def _set_point_desc(self):
-        self.point.set_point_desc("unknown")
+    @staticmethod
+    def decode_units(attr_dict):
+        return "unknown"
+
+    @staticmethod
+    def decode_building_type(attr_dict):
+        return "unknown"
+
+    @staticmethod
+    def decode_device_type(attr_dict):
+        return "unknown"
+
+    @staticmethod
+    def decode_room_type(attr_dict):
+        return "unknown"
+
+    @staticmethod
+    def decode_point_type(attr_dict):
+        return "unknown"

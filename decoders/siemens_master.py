@@ -9,6 +9,7 @@
 
 import json
 
+from decoders.point import Point
 from decoders.point_decoder import PointDecoder
 from decoders.evans_point_decoder import EvansPointDecoder
 from decoders.hulings_point_decoder import HulingsPointDecoder
@@ -22,16 +23,15 @@ BUILDING_PREFIX_MAP = {'EV': EvansPointDecoder,
                        'HULLINGS': HulingsPointDecoder}
 
 
-def get_point_object(name, point):
+def get_point_object(name, point_attributes):
     '''
     :param name: point name
-    :param point: attribute dictionary for point
+    :param point_attributes: attribute dictionary for point
     :return: Point object
     '''
     prefix = get_prefix(name)  # get prefix of point name
     building_decoder_class = get_building_decoder(prefix)  # class that corresponds to building mapping
-    building_decoder = building_decoder_class(point)  # instance of class
-    return building_decoder.get_point()
+    return Point(point_attributes, building_decoder_class)
 
 
 def get_building_decoder(prefix):

@@ -10,20 +10,20 @@
 
 class Point:
 
-    def __init__(self, point_name):
-        self.point_name = point_name
-        self.point_desc = "unknown"
-        self.building_name = "unknown"
-        self.device_name = "unknown"
-        self.device_desc = "unknown"
-        self.room_name = "unknown"
-        self.room_floor = "unknown"
-        self.room_desc = "unknown"
-        self.units = "unknown"
-        self.building_type = "unknown"
-        self.device_type = "unknown"
-        self.room_type = "unknown"
-        self.point_type = "unknown"
+    def __init__(self, attr_dict, decoder):
+        self.point_name = decoder.decode_point_name(attr_dict)
+        self.point_desc = decoder.decode_point_desc(attr_dict)
+        self.building_name = decoder.decode_building_name(attr_dict)
+        self.device_name = decoder.decode_device_name(attr_dict)
+        self.device_desc = decoder.decode_device_desc(attr_dict)
+        self.room_name = decoder.decode_room_name(attr_dict)
+        self.room_floor = decoder.decode_room_floor(attr_dict)
+        self.room_desc = decoder.decode_room_desc(attr_dict)
+        self.units = decoder.decode_units(attr_dict)
+        self.building_type = decoder.decode_building_type(attr_dict)
+        self.device_type = decoder.decode_device_type(attr_dict)
+        self.room_type = decoder.decode_room_type(attr_dict)
+        self.point_type = decoder.decode_point_type(attr_dict)
 
 
     def __iter__(self):
@@ -32,82 +32,6 @@ class Point:
 
     def __str__(self):
         return str(dict(self))
-
-
-    def set_point_name(self, name):
-        self.point_name = name
-
-    def get_point_name(self):
-        return self.point_name
-
-    def set_point_desc(self, desc):
-        self.point_desc = desc
-
-    def get_point_desc(self):
-        return self.point_desc
-
-    def set_building_name(self, name):
-        self.building_name = name
-
-    def get_building_name(self):
-        return self.building_name
-
-    def set_device_name(self, name):
-        self.device_name = name
-
-    def get_device_name(self):
-        return self.point_name
-
-    def set_device_desc(self, desc):
-        self.device_name = desc
-
-    def get_device_desc(self):
-        return self.point_desc
-
-    def set_room_name(self, name):
-        self.room_name = name
-
-    def get_room_name(self):
-        return self.room_name
-
-    def set_room_floor(self, floor):
-        self.room_floor = floor
-
-    def get_room_desc(self):
-        return self.room_desc
-
-    def set_room_desc(self, desc):
-        self.room_desc = desc
-
-    def get_units(self):
-        return self.units
-
-    def set_units(self, units):
-        self.units = units
-
-    def set_building_type(self, tag):
-        self.building_type = tag
-
-    def get_building_type(self):
-        return self.building_type
-
-    def set_room_type(self, tag):
-        self.room_type = tag
-
-    def get_room_type(self):
-        return self.room_type
-
-    def set_device_type(self, tag):
-        self.device_type = tag
-
-    def get_device_type(self):
-        return self.device_type
-
-    def set_point_type(self, tag):
-        self.point_type = tag
-
-    def get_point_type(self):
-        return self.point_type
 
     def get_tags(self):
         return [self.building_type, self.device_type, self.room_type, self.point_type]
