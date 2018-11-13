@@ -9,7 +9,7 @@
 
 import json
 
-
+from decoders.point_decoder import PointDecoder
 from decoders.evans_point_decoder import EvansPointDecoder
 from decoders.hulings_point_decoder import HulingsPointDecoder
 
@@ -17,9 +17,9 @@ from decoders.hulings_point_decoder import HulingsPointDecoder
 BUILDING_PREFIX_MAP = {'EV': EvansPointDecoder,
                        'EVANS': EvansPointDecoder,
                        'HU': HulingsPointDecoder,
-                       'BO': HulingsPointDecoder,
-                       'HULINGS': HulingsPointDecoder,
-                       'HULLINGS': HulingsPointDecoder}
+                      'BO': HulingsPointDecoder,
+                     'HULINGS': HulingsPointDecoder,
+                      'HULLINGS': HulingsPointDecoder}
 
 
 def get_point_object(name, point):
@@ -60,10 +60,21 @@ if __name__ == '__main__':
 
     point_list = [get_point_object(name, point) for name, point in points.items()]  # list of point objects
 
-    print(' Number of points to decode:', len(points))
-    print(' Number of points decoded (attempted):', len(point_list))
+    #print(' Number of points to decode:', len(points))
+    #print(' Number of points decoded (attempted):', len(point_list))
 
     print('================ Decoded points (attempted) ================')
+
+   # numEvansPoints = 0
+   # numEvansPointsDescribed = 0
     for point in point_list:
-        print(str(point))
-        pass
+        if point.building_name == "Evans":
+            #numEvansPoints +=1
+            print(str(point))
+            #print(str(point.room_floor))
+            pass
+            #if point.point_desc != "unknown":
+                #numEvansPointsDescribed +=1
+    #print("Total points:", numEvansPoints)
+    #print("Described points:",numEvansPointsDescribed)
+
