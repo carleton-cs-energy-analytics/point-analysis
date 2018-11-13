@@ -59,7 +59,7 @@ class Point:
         return self.point_name
 
     def set_device_desc(self, desc):
-        self.device_name = desc
+        self.device_desc = desc
 
     def get_device_desc(self):
         return self.point_desc
