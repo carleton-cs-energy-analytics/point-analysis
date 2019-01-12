@@ -1,4 +1,3 @@
-from .point import Point
 
 
 class PointDecoder:
