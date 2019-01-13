@@ -46,42 +46,47 @@ def import_point(points):
     for point in points:
         building_id = get_id_of("buildings", point.building_name)
         if building_id is None:
-            execute_and_commit("""INSERT INTO %s (name) VALUES (%s)""", "buildings", point.building_name)
-            building_id = get_id_of(table, point.building_name)
+            execute_and_commit("""INSERT INTO buildings (name) VALUES (%s)""", point.building_name)
+            building_id = get_id_of("buildings", point.building_name)
 
         # use somewhere: {'floor': point.room_floor, 'building_id': building_id}
         room_id = get_id_of("rooms", point.room_name)
         if room_id is None:
-            execute_and_commit("""INSERT INTO %s (name) VALUES (%s)""", "rooms", point.room_name)
+            execute_and_commit(
+                """INSERT INTO rooms (name, building_id, floor) VALUES (%s, %s, %s)""",
+                (point.room_name, building_id, point.room_floor))
             room_id = get_id_of("rooms", point.room_name)
 
         # {'room_id': room_id}
         device_id = get_id_of("devices", point.device_name)
         if device_id is None:
-            execute_and_commit("""INSERT INTO %s (name) VALUES (%s)""", "devices", point.device_name)
+            execute_and_commit("""INSERT INTO devices (name, room_id) VALUES (%s, %s)""",
+                               (point.device_name, room_id))
             device_id = get_id_of("devices", point.device_name)
 
-        insert("""
-                INSERT INTO points (name, device_id, value_type_id, value_unit_id)
-                """)
+        # value_type_id = get_id_of("value_type", ???)
+        value_type_id = 3
 
+        value_units_id = get_id_of("value_units", point.units)
 
-    def add(values):
-        """Adds a list of values to the database.
+        execute_and_commit("""
+                        INSERT INTO points (name, device_id, value_type_id, value_unit_id) VALUES
+                        (%s, %s, %s, %s)
+                        """, (point.point_name, device_id, value_type_id, value_units_id))
 
-        :param values: A list of 3-tuples in the form `(point_name, timestamp, value)` where values
-        are ints, doubles, or enum strings.
-        """
+        point_id = get_id_of("points", point.point_name)
 
-        int_values, float_values = Values._prepare_add(values)
+        for (table, id, tags) in [('buildings', building_id, point.building_type),
+                                  ('rooms', room_id, point.room_type),
+                                  ('devices', device_id, point.device_type),
+                                  ('points', point_id, point.point_type)]:
+            for tag in tags:
+                tag_id = get_id_of("tags", tag)
+                if tag_id is None:
+                    execute_and_commit("""INSERT INTO tags (name) VALUES (%s)""", tag)
+                    tag_id = get_id_of("tags", tag)
 
-        # Only want to insert values if there are values to be inserted for the particular type
-        if len(float_values) > 0:
-            insert_values("""
-                INSERT INTO values (point_id, timestamp, double) VALUES 
-                """, float_values)
+                execute_and_commit(
+                    """INSERT INTO %s_tags (%s_id, tag_id) VALUES (%s, %s) ON CONFLICT DO NOTHING""",
+                    (table, table[:-1], id, tag_id))
 
-        if len(int_values) > 0:
-            insert_values("""
-                INSERT INTO values (point_id, timestamp, int) VALUES 
-                """, int_values)
