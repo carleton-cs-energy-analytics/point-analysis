@@ -35,4 +35,7 @@ class Point:
         return str(dict(self))
 
     def get_tags(self):
-        return [self.building_type, self.device_type, self.room_type, self.point_type]
+        # @TODO: Temporary placeholder. Implement in accordance with plan for tag import from Eva, Chris, and Alex
+        return {'point_tags': [self.point_type],
+                'device_tags': [],
+                'building_tags': [self.building_type]}
