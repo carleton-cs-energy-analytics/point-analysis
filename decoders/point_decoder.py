@@ -52,3 +52,7 @@ class PointDecoder:
     @staticmethod
     def decode_point_type(attr_dict):
         return "unknown"
+
+    @staticmethod
+    def decode_value_type(attr_dict):
+        return "unknown"

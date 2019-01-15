@@ -24,6 +24,7 @@ class Point:
         self.device_type = decoder.decode_device_type(attr_dict)
         self.room_type = decoder.decode_room_type(attr_dict)
         self.point_type = decoder.decode_point_type(attr_dict)
+        self.value_type = decoder.decode_value_type(attr_dict)
 
 
     def __iter__(self):
