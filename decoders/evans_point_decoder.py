@@ -22,7 +22,8 @@ class EvansPointDecoder(PointDecoder):
         sub_names = attr_dict["Point Name"][0].split('.')
         split1 = sub_names[1]
         if "RM" in split1:
-            return re.findall(r'\d+', split1)
+            room_name_list = re.findall(r'\d+', split1)
+            return room_name_list[0] if room_name_list else 'unknown'
         return "unknown"
 
     @staticmethod
@@ -30,7 +31,8 @@ class EvansPointDecoder(PointDecoder):
         sub_names = attr_dict["Point Name"][0].split('.')
         split1 = sub_names[1]
         if "RM" in split1:
-            return re.findall(r'(?<=\D)\d', split1)
+            room_floor_list =  re.findall(r'(?<=\D)\d', split1)
+            return room_floor_list[0] if room_floor_list else 'unknown'
         return "unknown"
 
     @staticmethod
