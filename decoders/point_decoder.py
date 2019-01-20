@@ -55,4 +55,6 @@ class PointDecoder:
 
     @staticmethod
     def decode_value_type(attr_dict):
-        return "unknown"
+        return attr_dict.get("Text Table")[0] \
+               or attr_dict.get("Analog Representation")[0] \
+               or "unknown"
