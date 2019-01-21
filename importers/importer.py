@@ -64,8 +64,19 @@ def import_point(points):
                                (point.device_name, room_id))
             device_id = get_id_of("devices", point.device_name)
 
-        # value_type_id = get_id_of("value_type", ???)
-        value_type_id = 3
+        reordering_map = {
+            "OCC_UNOCC": "UNOCC_OCC",
+            "ON_OFF": "OFF_ON",
+            "OPEN_CLOSED": "CLOSED_OPEN",
+            "DAY_NIGHT": "NIGHT_DAY",
+            "ENABLE_DISABL": "DISABL_ENABLE"
+        }
+
+        if point.value_type in reordering_map.keys():
+            point.value_type = reordering_map[point.value_type]
+        value_type_id = get_id_of("value_types", point.value_type)
+        if value_type_id is None:
+            pass
 
         value_units_id = get_id_of("value_units", point.units)
 
