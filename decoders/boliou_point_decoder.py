@@ -7,6 +7,7 @@ import re
 
 from decoders.point_decoder import PointDecoder
 
+
 class BoliouPointDecoder(PointDecoder):
 
     @staticmethod
@@ -88,16 +89,46 @@ class BoliouPointDecoder(PointDecoder):
             return "Day Cooling Setpoint"
         elif "DAY HTG STPT" in split1:
             return "Day Heating Setpoint"
+        elif "DAY.NGT" in split1:
+            return "Day/Night"
+        elif "DMPR COMD" in split1:
+            return "Damper Command"
+        elif "DMPR POS" in split1:
+            return "Damper Position"
+        elif "DUCT AREA" in split1:
+            return "Duct Area"
         elif "FLOW COEFF" in split1:
             return "Flow Coefficient"
         elif "FLOW STPT" in split1:
             return "Flow Setpoint"
         elif "FLOW" in split1:
             return "Flow"
+        elif "HEAT.COOL" in split1:
+            return "Heating/Cooling"
         elif "HTG FLOW MAX" in split1:
             return "Heating Maximum Flow"
         elif "HTG FLOW MIN" in split1:
             return "Heating Minimum Flow"
         elif "HTG LOOPOUT" in split1:
             return "Heating Loopout"
+        elif "MTR SETUP" in split1:
+            return "Meter Setup"
+        elif "NGT CLG STPT" in split1:
+            return "Night Cooling Setpoint"
+        elif "NGT HTG STPT" in split1:
+            return "Night Heating Setpoint"
+        elif "NGT OVRD" in split1:
+            return "Night Override"
+        elif "ROOM TEMP" in split1:
+            return "Room Temperature"
+        elif "VALVE COUNT" in split1:
+            return "Valve Count"
+        elif "VLV1 COMD" in split1:
+            return "Valve One Command"
+        elif "VLV1 POS" in split1:
+            return "Valve One Position"
+        elif "VLV2 COMD" in split1:
+            return "Valve Two Command"
+        elif "VLV2 POS" in split1:
+            return "Valve Two Position"
         return "unknown"
