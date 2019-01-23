@@ -86,13 +86,27 @@ class EvansPointDecoder(PointDecoder):
 
     @staticmethod
     def decode_point_type(attr_dict):
-        sub_names = attr_dict["Point Name"][0].split('.')
+        name = PointDecoder.decode_point_name(attr_dict)
+        sub_names = PointDecoder.get_delimited_pointname(attr_dict)
         if len(sub_names) == 3:
             split2 = sub_names[2]
-            if "RT" in split2:
+            if "RT" == split2:
                 return "Room Temperature"
-            elif "SP" in split2:
+            elif "SP" == split2:
                 return "Room Temperature Set Point"
-            elif "V" in split2:
+            elif "V" == split2:
                 return "Radiation Valve"
+        if name[-3:] == 'VSP' or name[-8:] == 'VSP cave':
+            return "Virtual Room Temperature Set Point"
+        if sub_names[-1] == 'DAY HTG STPT':
+            return "Day Heating Set Point"
+        if sub_names[-1] == 'NGT HTG STPT':
+            return "Night Heating Set Point"
+        if sub_names[-1] == 'DAY CLG STPT':
+            return "Day Cooling Set Point"
+        if sub_names[-1] == 'NGT CLG STPT':
+            return "Night Cooling Set Point"
+        if sub_names[-1] == 'RM STPT DIAL':
+            return "Room Set Point Dial"
+
         return "unknown"
