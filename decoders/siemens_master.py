@@ -54,16 +54,8 @@ def get_prefix(point_name):
     first_delimiter_index = next((i for i, ch in enumerate(point_name) if ch in delimiters), None)
     return point_name[:first_delimiter_index] if first_delimiter_index else point_name[:2]
 
-
-if __name__ == '__main__':
+def get_points():
     with open('../data/points.json') as f:
         points = json.loads(f.read())  # read point dictionary from points.json
 
     point_list = [get_point_object(name, point) for name, point in points.items()]  # list of point objects
-
-    print(' Number of points to decode:', len(points))
-    print(' Number of points decoded (attempted):', len(point_list))
-
-    print('================ Decoded points (attempted) ================')
-    for point in point_list:
-        print(str(point))
