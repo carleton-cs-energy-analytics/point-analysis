@@ -59,3 +59,4 @@ def get_points():
         points = json.loads(f.read())  # read point dictionary from points.json
 
     point_list = [get_point_object(name, point) for name, point in points.items()]  # list of point objects
+    return points_list
