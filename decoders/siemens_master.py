@@ -49,6 +49,7 @@ def get_prefix(point_name):
     if a point has a delimiter, the prefix is the name up to the delimiter. Else, it is
     the first two characters of the point name. '''
     delimiters = {'.', ':', ' ', '-'}
+
     # calculate index of first delimiter, else None
     first_delimiter_index = next((i for i, ch in enumerate(point_name) if ch in delimiters), None)
     return point_name[:first_delimiter_index] if first_delimiter_index else point_name[:2]

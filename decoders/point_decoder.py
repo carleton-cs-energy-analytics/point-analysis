@@ -58,3 +58,20 @@ class PointDecoder:
         return attr_dict.get("Text Table")[0] \
                or attr_dict.get("Analog Representation")[0] \
                or "unknown"
+
+
+    @staticmethod
+    def get_delimited_pointname(attr_dict):
+        name = PointDecoder.decode_point_name(attr_dict)
+        simplified_name = name.replace(';', '.').replace(':', '.').replace('-', '.')
+        return simplified_name.split('.')
+
+    @staticmethod
+    def get_useful_attr_dict(attr_dict):
+        """
+        Helper method for print statements to avoid unnecessarily verbose printouts
+        :param attr_dict: attribute dictionary
+        :return: simplified attribute dict, with only usually useful values
+        """
+        wanted_items = ['Engineering Units', 'Classification', 'Panel Name', 'Point Type', 'Point Name', 'Descriptor', 'Engineering Units']
+        return {k: v for (k, v) in attr_dict.items() if k in wanted_items}
