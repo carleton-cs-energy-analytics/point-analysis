@@ -1,6 +1,7 @@
 import os
 import sys
 import psycopg2
+from decoders.siemens_master import get_points
 
 CONN = psycopg2.connect(host=os.environ.get('DATABASE_HOST') or '',
                         dbname=os.environ.get('DATABASE_NAME') or 'energy-dev',
@@ -35,18 +36,20 @@ def execute_and_commit(query, vars):
 
 def get_id_of(table, name):
     with CONN.cursor() as curs:
-        curs.execute("""SELECT %s_id FROM %s WHERE name = %s""", table, table, name)
-        if len(curs.fetchall()) == 0:
+        query = "SELECT " + table[:-1] + "_id FROM " + table + " WHERE name = %s"
+        curs.execute(query, (name,))
+        results = curs.fetchall()
+        if len(results) == 0:
             return None
         else:
-            return curs.fetchall()[0][0]
+            return results[0][0]
 
 
 def import_point(points):
     for point in points:
         building_id = get_id_of("buildings", point.building_name)
         if building_id is None:
-            execute_and_commit("""INSERT INTO buildings (name) VALUES (%s)""", point.building_name)
+            execute_and_commit("""INSERT INTO buildings (name) VALUES (%s)""", (point.building_name,))
             building_id = get_id_of("buildings", point.building_name)
 
         # use somewhere: {'floor': point.room_floor, 'building_id': building_id}
@@ -76,9 +79,11 @@ def import_point(points):
             point.value_type = reordering_map[point.value_type]
         value_type_id = get_id_of("value_types", point.value_type)
         if value_type_id is None:
-            pass
+            raise Exception("value_type of name %s not found" % point.value_type)
 
         value_units_id = get_id_of("value_units", point.units)
+        # if value_units_id is None:
+        #     raise Exception("value_units of name %s not found" % point.units)
 
         execute_and_commit("""
                         INSERT INTO points (name, device_id, value_type_id, value_unit_id) VALUES
@@ -94,10 +99,18 @@ def import_point(points):
             for tag in tags:
                 tag_id = get_id_of("tags", tag)
                 if tag_id is None:
-                    execute_and_commit("""INSERT INTO tags (name) VALUES (%s)""", tag)
+                    execute_and_commit("""INSERT INTO tags (name) VALUES (%s)""", (tag,))
                     tag_id = get_id_of("tags", tag)
 
                 execute_and_commit(
                     """INSERT INTO %s_tags (%s_id, tag_id) VALUES (%s, %s) ON CONFLICT DO NOTHING""",
                     (table, table[:-1], id, tag_id))
+
+
+def main():
+    import_point(get_points())
+
+
+if __name__ == '__main__':
+    main()
 

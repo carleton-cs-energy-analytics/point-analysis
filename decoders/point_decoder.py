@@ -55,10 +55,12 @@ class PointDecoder:
 
     @staticmethod
     def decode_value_type(attr_dict):
-        return attr_dict.get("Text Table")[0] \
-               or attr_dict.get("Analog Representation")[0] \
-               or "unknown"
-
+        if attr_dict.get("Text Table") is not None:
+            return attr_dict.get("Text Table")[0]
+        elif attr_dict.get("Analog Representation") is not None:
+            return attr_dict.get("Analog Representation")[0]
+        else:
+            return "unknown"
 
     @staticmethod
     def get_delimited_pointname(attr_dict):

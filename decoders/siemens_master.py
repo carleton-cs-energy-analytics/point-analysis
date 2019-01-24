@@ -17,10 +17,11 @@ from decoders.hulings_point_decoder import HulingsPointDecoder
 # maps building prefixes to building subclass decoders
 BUILDING_PREFIX_MAP = {'EV': EvansPointDecoder,
                        'EVANS': EvansPointDecoder,
-                       'HU': HulingsPointDecoder,
-                       'BO': HulingsPointDecoder,
-                       'HULINGS': HulingsPointDecoder,
-                       'HULLINGS': HulingsPointDecoder}
+                       # 'HU': HulingsPointDecoder,
+                       # 'BO': HulingsPointDecoder,
+                       # 'HULINGS': HulingsPointDecoder,
+                       # 'HULLINGS': HulingsPointDecoder,
+                       }
 
 
 def get_point_object(name, point_attributes):
@@ -54,9 +55,10 @@ def get_prefix(point_name):
     first_delimiter_index = next((i for i, ch in enumerate(point_name) if ch in delimiters), None)
     return point_name[:first_delimiter_index] if first_delimiter_index else point_name[:2]
 
+
 def get_points():
     with open('../data/points.json') as f:
         points = json.loads(f.read())  # read point dictionary from points.json
 
-    point_list = [get_point_object(name, point) for name, point in points.items()]  # list of point objects
+    points_list = [get_point_object(name, point) for name, point in points.items()]  # list of point objects
     return points_list
