@@ -8,6 +8,11 @@ CONN = psycopg2.connect(host=os.environ.get('DATABASE_HOST') or '',
                         user=os.environ.get('DATABASE_USER') or '',
                         password=os.environ.get('DATABASE_PASSWORD') or '')
 
+def try_cast_int(s):
+    try:
+        return int(s)
+    except ValueError:
+        return None
 
 def insert_values(query, items):
     """Used for inserting values into the database. Takes a query and a list of 3-tuples, appends
@@ -36,8 +41,7 @@ def execute_and_commit(query, vars):
 
 def get_id_of(table, name):
     with CONN.cursor() as curs:
-        query = "SELECT " + table[:-1] + "_id FROM " + table + " WHERE name = %s"
-        curs.execute(query, (name,))
+        curs.execute("SELECT " + table[:-1] + "_id FROM " + table + " WHERE name = %s", (name,))
         results = curs.fetchall()
         if len(results) == 0:
             return None
@@ -57,7 +61,7 @@ def import_point(points):
         if room_id is None:
             execute_and_commit(
                 """INSERT INTO rooms (name, building_id, floor) VALUES (%s, %s, %s)""",
-                (point.room_name, building_id, point.room_floor))
+                (point.room_name, building_id, try_cast_int(point.room_floor)))
             room_id = get_id_of("rooms", point.room_name)
 
         # {'room_id': room_id}
@@ -72,7 +76,8 @@ def import_point(points):
             "ON_OFF": "OFF_ON",
             "OPEN_CLOSED": "CLOSED_OPEN",
             "DAY_NIGHT": "NIGHT_DAY",
-            "ENABLE_DISABL": "DISABL_ENABLE"
+            "ENABLE_DISABL": "DISABL_ENABLE",
+            "DISABL_ENABL": "DISABL_ENABLE"
         }
 
         if point.value_type in reordering_map.keys():
@@ -81,7 +86,7 @@ def import_point(points):
         if value_type_id is None:
             raise Exception("value_type of name %s not found" % point.value_type)
 
-        value_units_id = get_id_of("value_units", point.units)
+        value_units_id = None  # get_id_of("value_units", point.units)
         # if value_units_id is None:
         #     raise Exception("value_units of name %s not found" % point.units)
 
@@ -103,8 +108,8 @@ def import_point(points):
                     tag_id = get_id_of("tags", tag)
 
                 execute_and_commit(
-                    """INSERT INTO %s_tags (%s_id, tag_id) VALUES (%s, %s) ON CONFLICT DO NOTHING""",
-                    (table, table[:-1], id, tag_id))
+                    "INSERT INTO " + table + "_tags (" + table[:-1] + "_id, tag_id) " +
+                    "VALUES (%s, %s) ON CONFLICT DO NOTHING", (id, tag_id))
 
 
 def main():
