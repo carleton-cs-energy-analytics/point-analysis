@@ -11,11 +11,11 @@ class EvansPointDecoder(PointDecoder):
 
     @staticmethod
     def decode_device_name(attr_dict):
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_device_desc(attr_dict):
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_room_name(attr_dict):
@@ -23,8 +23,8 @@ class EvansPointDecoder(PointDecoder):
         split1 = sub_names[1]
         if "RM" in split1:
             room_name_list = re.findall(r'\d+', split1)
-            return room_name_list[0] if room_name_list else 'unknown'
-        return "unknown"
+            return room_name_list[0] if room_name_list else None
+        return None
 
     @staticmethod
     def decode_room_floor(attr_dict):
@@ -32,8 +32,8 @@ class EvansPointDecoder(PointDecoder):
         split1 = sub_names[1]
         if "RM" in split1:
             room_floor_list =  re.findall(r'(?<=\D)\d', split1)
-            return room_floor_list[0] if room_floor_list else 'unknown'
-        return "unknown"
+            return room_floor_list[0] if room_floor_list else None
+        return None
 
     @staticmethod
     def decode_units(attr_dict):
@@ -56,9 +56,9 @@ class EvansPointDecoder(PointDecoder):
                     'CFM': 'cubic feet per minute', }
 
         if 'Engineering Units' in attr_dict:
-            return unit_map.get(attr_dict['Engineering Units'][0], 'unknown')
+            return unit_map.get(attr_dict['Engineering Units'][0])
 
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_building_type(attr_dict):
@@ -82,7 +82,7 @@ class EvansPointDecoder(PointDecoder):
             return "Heat Exchanger"
         elif "FC" in split1:
             return "Fan Coil Unit"
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_point_type(attr_dict):
@@ -109,4 +109,4 @@ class EvansPointDecoder(PointDecoder):
         if sub_names[-1] == 'RM STPT DIAL':
             return "Room Set Point Dial"
 
-        return "unknown"
+        return None

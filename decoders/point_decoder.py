@@ -7,60 +7,60 @@ class PointDecoder:
 
     @staticmethod
     def decode_point_desc(attr_dict):
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_building_name(attr_dict):
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_device_name(attr_dict):
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_device_desc(attr_dict):
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_room_name(attr_dict):
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_room_floor(attr_dict):
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_room_desc(attr_dict):
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_units(attr_dict):
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_building_type(attr_dict):
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_device_type(attr_dict):
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_room_type(attr_dict):
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_point_type(attr_dict):
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_value_type(attr_dict):
-        if attr_dict.get("Text Table") is not None:
-            return attr_dict.get("Text Table")[0]
-        elif attr_dict.get("Analog Representation") is not None:
-            return attr_dict.get("Analog Representation")[0]
+        if "Text Table" in attr_dict:
+            return attr_dict["Text Table"][0]
+        elif "Analog Representation" in attr_dict:
+            return attr_dict["Analog Representation"][0]
         else:
-            return "unknown"
+            return None
 
     @staticmethod
     def get_delimited_pointname(attr_dict):
@@ -75,5 +75,6 @@ class PointDecoder:
         :param attr_dict: attribute dictionary
         :return: simplified attribute dict, with only usually useful values
         """
-        wanted_items = ['Engineering Units', 'Classification', 'Panel Name', 'Point Type', 'Point Name', 'Descriptor', 'Engineering Units']
+        wanted_items = ['Engineering Units', 'Classification', 'Panel Name', 'Point Type',
+                        'Point Name', 'Descriptor', 'Engineering Units']
         return {k: v for (k, v) in attr_dict.items() if k in wanted_items}
