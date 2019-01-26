@@ -3,7 +3,7 @@
 class PointDecoder:
     @staticmethod
     def decode_point_name(attr_dict):
-        return attr_dict["Point Name"][0]
+        return attr_dict["Point System Name"][0]
 
     @staticmethod
     def decode_point_desc(attr_dict):
