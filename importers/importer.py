@@ -14,19 +14,6 @@ def try_cast_int(s):
     except ValueError:
         return None
 
-def insert_values(query, items):
-    """Used for inserting values into the database. Takes a query and a list of 3-tuples, appends
-    the 3-tuples to the query, and then executes and commits it.
-
-    :param query: The SQL query
-    :param items: A list of 3-tuples to be appended to the end of the query
-    """
-    with CONN.cursor() as curs:
-        # sanitizes (mogrify) the items, creating strings, and then joins them together with commas
-        args_str = ','.join(curs.mogrify("(%s, %s, %s)", item).decode("utf-8") for item in items)
-        curs.execute(query + args_str + ";")
-        CONN.commit()
-
 
 def execute_and_commit(query, vars):
     """Runs the given query on the database, then commits the database connection.
