@@ -1,5 +1,4 @@
 import os
-import sys
 import psycopg2
 from decoders.siemens_master import get_points
 
@@ -8,11 +7,15 @@ CONN = psycopg2.connect(host=os.environ.get('DATABASE_HOST') or '',
                         user=os.environ.get('DATABASE_USER') or '',
                         password=os.environ.get('DATABASE_PASSWORD') or '')
 
+
 def try_cast_int(s):
     try:
         return int(s)
     except ValueError:
         return None
+    except TypeError:
+        return None
+
 
 
 def execute_and_commit(query, vars):
@@ -26,9 +29,17 @@ def execute_and_commit(query, vars):
         CONN.commit()
 
 
-def get_id_of(table, name):
+def get_id_of(table, name, building_id=None, room_id=None):
     with CONN.cursor() as curs:
-        curs.execute("SELECT " + table[:-1] + "_id FROM " + table + " WHERE name = %s", (name,))
+        query = "SELECT " + table[:-1] + "_id FROM " + table + " WHERE name = %s"
+        vars = (name,)
+        if building_id is not None:
+            query += " and building_id = %s"
+            vars += (building_id,)
+        elif room_id is not None:
+            query += " and room_id = %s"
+            vars += (room_id,)
+        curs.execute(query, vars)
         results = curs.fetchall()
         if len(results) == 0:
             return None
@@ -38,25 +49,30 @@ def get_id_of(table, name):
 
 def import_point(points):
     for point in points:
+        point.building_name = point.building_name or "UnID'd Building"
         building_id = get_id_of("buildings", point.building_name)
         if building_id is None:
-            execute_and_commit("""INSERT INTO buildings (name) VALUES (%s)""", (point.building_name,))
+            execute_and_commit("""INSERT INTO buildings (name) VALUES (%s)""",
+                               (point.building_name,))
             building_id = get_id_of("buildings", point.building_name)
 
         # use somewhere: {'floor': point.room_floor, 'building_id': building_id}
-        room_id = get_id_of("rooms", point.room_name)
+        point.room_name = point.room_name or "UnID'd Room in " + point.building_name
+        room_id = get_id_of("rooms", point.room_name, building_id=building_id)
         if room_id is None:
             execute_and_commit(
                 """INSERT INTO rooms (name, building_id, floor) VALUES (%s, %s, %s)""",
                 (point.room_name, building_id, try_cast_int(point.room_floor)))
-            room_id = get_id_of("rooms", point.room_name)
+            room_id = get_id_of("rooms", point.room_name, building_id=building_id)
 
         # {'room_id': room_id}
-        device_id = get_id_of("devices", point.device_name)
+        point.device_name = point.device_name or "UnID'd Device in " + point.building_name \
+                            + " " + point.room_name
+        device_id = get_id_of("devices", point.device_name, room_id=room_id)
         if device_id is None:
             execute_and_commit("""INSERT INTO devices (name, room_id) VALUES (%s, %s)""",
                                (point.device_name, room_id))
-            device_id = get_id_of("devices", point.device_name)
+            device_id = get_id_of("devices", point.device_name, room_id=room_id)
 
         reordering_map = {
             "OCC_UNOCC": "UNOCC_OCC",
@@ -88,6 +104,8 @@ def import_point(points):
                                   ('rooms', room_id, point.room_type),
                                   ('devices', device_id, point.device_type),
                                   ('points', point_id, point.point_type)]:
+            if tags is None:  # TODO: This is just a hotfix. I (ATD) think we need to redesign this.
+                continue
             for tag in tags:
                 tag_id = get_id_of("tags", tag)
                 if tag_id is None:
@@ -105,4 +123,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
