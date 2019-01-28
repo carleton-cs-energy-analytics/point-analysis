@@ -26,7 +26,6 @@ class Point:
         self.point_type = decoder.decode_point_type(attr_dict)
         self.value_type = decoder.decode_value_type(attr_dict)
 
-
     def __iter__(self):
         for attr, value in self.__dict__.items():
             yield attr, value

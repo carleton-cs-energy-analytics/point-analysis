@@ -16,11 +16,11 @@ class BoliouPointDecoder(PointDecoder):
 
     @staticmethod
     def decode_device_name(attr_dict):
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_device_desc(attr_dict):
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_room_name(attr_dict):
@@ -31,8 +31,8 @@ class BoliouPointDecoder(PointDecoder):
             room_name = location_units[3]
             if "RM" in room_name:
                 room_name_list = re.findall(r'\d+', room_name)
-                return room_name_list[0] if room_name_list else 'unknown'
-        return "unknown"
+                return room_name_list[0] if room_name_list else None
+        return None
 
     @staticmethod
     def decode_room_floor(attr_dict):
@@ -44,7 +44,7 @@ class BoliouPointDecoder(PointDecoder):
             return "First"
         elif "GND" in split0:
             return "Ground"
-        return "Unknown"
+        return None
 
     @staticmethod
     def decode_units(attr_dict):
@@ -55,9 +55,9 @@ class BoliouPointDecoder(PointDecoder):
             'SQ. FT': 'square feet'}
 
         if 'Engineering Unit' in attr_dict:
-            return unit_map.get(attr_dict['Engineering Units'][0], 'unknown')
+            return unit_map.get(attr_dict['Engineering Units'][0])
 
-        return "unknown"
+        return None
 
     @staticmethod
     def decode_building_type(attr_dict):
@@ -131,4 +131,4 @@ class BoliouPointDecoder(PointDecoder):
             return "Valve Two Command"
         elif "VLV2 POS" in split1:
             return "Valve Two Position"
-        return "unknown"
+        return None
