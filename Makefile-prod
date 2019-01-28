@@ -1,0 +1,4 @@
+.PHONY: import
+
+import:
+	PYTHONPATH=. DATABASE_HOST=localhost DATABASE_NAME=energy DATABASE_USER=energy DATABASE_PASSWORD="[REDACTED]" python3 ./importers/importer.py

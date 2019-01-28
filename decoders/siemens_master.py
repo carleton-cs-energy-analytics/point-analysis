@@ -57,7 +57,7 @@ def get_prefix(point_name):
 
 
 def get_points():
-    with open('../data/points.json') as f:
+    with open('./data/points.json') as f:
         points = json.loads(f.read())  # read point dictionary from points.json
 
     points_list = [get_point_object(name, point) for name, point in points.items()]  # list of point objects
