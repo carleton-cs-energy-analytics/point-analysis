@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-'''
+"""
     siemens_master.py
     Ethan Cassel-Mace and Chris Tordi, 4 November 2018
 
     Controls decoding of Siemens points. Delegates which building subclass a point will be passed to. Outputs list
     of point objects.
-'''
+"""
 
 import json
 
@@ -22,6 +22,10 @@ BUILDING_PREFIX_MAP = {'EV': EvansPointDecoder,
                        # 'HULINGS': HulingsPointDecoder,
                        # 'HULLINGS': HulingsPointDecoder,
                        }
+
+DECODED_BUILDINGS_SET = {'Evans',
+                         'Boliou',
+                         'Hulings'}
 
 
 def get_point_object(name, point_attributes):
@@ -61,4 +65,5 @@ def get_points():
         points = json.loads(f.read())  # read point dictionary from points.json
 
     points_list = [get_point_object(name, point) for name, point in points.items()]  # list of point objects
-    return points_list
+    filtered_by_building = [point for point in points_list if point.building_name in DECODED_BUILDINGS_SET]
+    return filtered_by_building
