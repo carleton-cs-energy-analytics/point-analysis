@@ -6,6 +6,10 @@ class PointDecoder:
         return attr_dict["Point System Name"][0]
 
     @staticmethod
+    def decode_verbose_point_name(attr_dict):
+        return attr_dict["Point Name"][0]
+
+    @staticmethod
     def decode_point_desc(attr_dict):
         return None
 
