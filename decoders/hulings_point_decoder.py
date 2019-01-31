@@ -1,46 +1,10 @@
 from decoders.point_decoder import PointDecoder
 from decoders.point import Point
 
+import re
+
 
 class HulingsPointDecoder(PointDecoder):
-
-    def __init__(self, attr_dict):
-        self.point = Point(attr_dict['Point Name'][0])
-        self.attr_dict = attr_dict
-
-        self._set_building()
-        self._set_device()
-        self._set_room()
-        self._set_tags()
-        self._set_point_desc()
-        self._set_units()
-    
-    def get_point(self):
-        return self.point
-
-    def _set_building(self):
-        self.point.set_building_name("Hulings")
-
-    def _set_room(self):
-        self.point.set_room_name(None)
-        self.point.set_room_floor(None)
-        self.point.set_room_desc(None)
-
-    def _set_device(self):
-        self.point.set_device_name(None)
-        self.point.set_device_desc(None)
-
-    def _set_units(self):
-        self.point.set_units(None)
-
-    def _set_tags(self):
-        self.point.set_building_type(None)
-        self.point.set_device_type(None)
-        self.point.set_room_type(None)
-        self.point.set_point_type(None)
-
-    def _set_point_desc(self):
-        self.point.set_point_desc(None)
 
     @staticmethod
     def decode_building_name(attr_dict):
@@ -76,7 +40,7 @@ class HulingsPointDecoder(PointDecoder):
 
     @staticmethod
     def decode_building_type(attr_dict):
-        return "academic"
+        return "Academic"
 
     @staticmethod
     def decode_device_type(attr_dict):

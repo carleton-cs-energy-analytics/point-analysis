@@ -61,7 +61,7 @@ class BoliouPointDecoder(PointDecoder):
 
     @staticmethod
     def decode_building_type(attr_dict):
-        return "academic"
+        return "Academic"
 
     @staticmethod
     def decode_point_type(attr_dict):
