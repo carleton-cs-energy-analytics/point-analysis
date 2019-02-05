@@ -34,14 +34,18 @@ class Point:
         return str(dict(self))
 
     def get_point_tags(self):
-        return [self.point_type]
+        point_tags = [self.point_type]
+        return [tag for tag in point_tags if tag is not None]
 
     def get_device_tags(self):
-        return [self.device_type]
+        device_tags = [self.device_type]
+        return [tag for tag in device_tags if tag is not None]
 
     def get_room_tags(self):
-        return [self.room_type]
+        room_tags = [self.room_type]
+        return [tag for tag in room_tags if tag is not None]
 
     def get_building_tags(self):
-        return [self.building_type]
+        building_tags = [self.building_type]
+        return [tag for tag in building_tags if tag is not None]
 
