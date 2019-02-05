@@ -20,6 +20,7 @@ class EvansPointDecoder(PointDecoder):
     @staticmethod
     def decode_room_name(attr_dict):
         name = PointDecoder.decode_point_name(attr_dict)
+        # matches EV.RM and then a number, B, or G, then a series of numbers. the last part is the room name
         room_list = re.findall(r'EV\.RM([\dBG]\d+)', name)
         return room_list[0] if room_list else None
 
@@ -35,6 +36,7 @@ class EvansPointDecoder(PointDecoder):
             'B': -1
         }
         name = PointDecoder.decode_point_name(attr_dict)
+        # picks out the first character of the room name. See decode_room_name() regex above  for more details
         floor_list = re.findall(r'EV\.RM([\dBG])\d+', name)
         return floor_map.get(floor_list[0], None) if floor_list else None
 
