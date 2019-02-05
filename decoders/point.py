@@ -49,3 +49,9 @@ class Point:
         building_tags = [self.building_type]
         return [tag for tag in building_tags if tag is not None]
 
+    def get_unit(self):
+        return self.units['unit']
+
+    def get_measurement(self):
+        return self.units['measurement']
+

@@ -31,33 +31,8 @@ class EvansPointDecoder(PointDecoder):
         sub_names = attr_dict["Point Name"][0].split('.')
         split1 = sub_names[1]
         if "RM" in split1:
-            room_floor_list =  re.findall(r'(?<=\D)\d', split1)
+            room_floor_list = re.findall(r'(?<=\D)\d', split1)
             return room_floor_list[0] if room_floor_list else None
-        return None
-
-    @staticmethod
-    def decode_units(attr_dict):
-        unit_map = {'DEG F': 'degrees fahrenheit',
-                    'PCT': 'percent open',
-                    'PCNT': 'percent open',
-                    'GAL': 'gallons',
-                    '% clos': 'percent closed',
-                    '% RH': 'percent humidity',
-                    '%RH': 'percent humidity',
-                    'KW': 'kilowatt hours',
-                    'KWH': 'kilowatt hours',
-                    'LBM': 'pounds',                # These steam measurements are relative guesses
-                    'LBH': 'pounds per hour',
-                    'LBM/HR': 'pounds per hour',
-                    'HZ': 'hertz',
-                    'GPM': 'gallons per minute',
-                    'PSI': 'pressure per square inch',
-                    'PSID': 'pressure differential',
-                    'CFM': 'cubic feet per minute', }
-
-        if 'Engineering Units' in attr_dict:
-            return unit_map.get(attr_dict['Engineering Units'][0])
-
         return None
 
     @staticmethod
