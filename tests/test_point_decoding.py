@@ -38,5 +38,13 @@ class PointDecodingTests(unittest.TestCase):
         for point in self.decoded_points:
             point.get_measurement()
 
+    def test_floor_is_int_or_none(self):
+        for point in self.decoded_points:
+            self.assertTrue(isinstance(point.room_floor, (type(None), int)))
+
+    def test_room_is_str_or_none(self):
+        for point in self.decoded_points:
+            self.assertTrue(isinstance(point.room_name, (type(None), str)))
+
 if __name__ == '__main__':
     unittest.main()

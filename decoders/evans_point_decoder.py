@@ -19,21 +19,24 @@ class EvansPointDecoder(PointDecoder):
 
     @staticmethod
     def decode_room_name(attr_dict):
-        sub_names = attr_dict["Point Name"][0].split('.')
-        split1 = sub_names[1]
-        if "RM" in split1:
-            room_name_list = re.findall(r'\d+', split1)
-            return room_name_list[0] if room_name_list else None
-        return None
+        name = PointDecoder.decode_point_name(attr_dict)
+        room_list = re.findall(r'EV\.RM([\dBG]\d+)', name)
+        return room_list[0] if room_list else None
 
     @staticmethod
     def decode_room_floor(attr_dict):
-        sub_names = attr_dict["Point Name"][0].split('.')
-        split1 = sub_names[1]
-        if "RM" in split1:
-            room_floor_list = re.findall(r'(?<=\D)\d', split1)
-            return room_floor_list[0] if room_floor_list else None
-        return None
+        floor_map = {
+            '0': 0,
+            '1': 1,
+            '2': 2,
+            '3': 3,
+            '4': 4,
+            'G': 0,
+            'B': -1
+        }
+        name = PointDecoder.decode_point_name(attr_dict)
+        floor_list = re.findall(r'EV\.RM([\dBG])\d+', name)
+        return floor_map.get(floor_list[0], None) if floor_list else None
 
     @staticmethod
     def decode_building_type(attr_dict):
