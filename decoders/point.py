@@ -33,8 +33,19 @@ class Point:
     def __str__(self):
         return str(dict(self))
 
-    def get_tags(self):
-        # @TODO: Temporary placeholder. Implement in accordance with plan for tag import from Eva, Chris, and Alex
-        return {'point_tags': [self.point_type],
-                'device_tags': [],
-                'building_tags': [self.building_type]}
+    def get_point_tags(self):
+        point_tags = [self.point_type]
+        return [tag for tag in point_tags if tag is not None]
+
+    def get_device_tags(self):
+        device_tags = [self.device_type]
+        return [tag for tag in device_tags if tag is not None]
+
+    def get_room_tags(self):
+        room_tags = [self.room_type]
+        return [tag for tag in room_tags if tag is not None]
+
+    def get_building_tags(self):
+        building_tags = [self.building_type]
+        return [tag for tag in building_tags if tag is not None]
+

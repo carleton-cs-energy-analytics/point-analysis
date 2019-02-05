@@ -100,21 +100,20 @@ def import_point(points):
 
         point_id = get_id_of("points", point.point_name)
 
-        for (table, id, tags) in [('buildings', building_id, point.building_type),
-                                  ('rooms', room_id, point.room_type),
-                                  ('devices', device_id, point.device_type),
-                                  ('points', point_id, point.point_type)]:
-            if tags is None:  # TODO: This is just a hotfix. I (ATD) think we need to redesign this.
-                continue
+        for (table, id, tags) in [('buildings', building_id, point.get_building_tags()),
+                                  ('rooms', room_id, point.get_room_tags()),
+                                  ('devices', device_id, point.get_device_tags()),
+                                  ('points', point_id, point.get_point_tags())]:
             for tag in tags:
-                tag_id = get_id_of("tags", tag)
-                if tag_id is None:
-                    execute_and_commit("""INSERT INTO tags (name) VALUES (%s)""", (tag,))
+                if tag is not None:
                     tag_id = get_id_of("tags", tag)
+                    if tag_id is None:
+                        execute_and_commit("""INSERT INTO tags (name) VALUES (%s)""", (tag,))
+                        tag_id = get_id_of("tags", tag)
 
-                execute_and_commit(
-                    "INSERT INTO " + table + "_tags (" + table[:-1] + "_id, tag_id) " +
-                    "VALUES (%s, %s) ON CONFLICT DO NOTHING", (id, tag_id))
+                    execute_and_commit(
+                        "INSERT INTO " + table + "_tags (" + table[:-1] + "_id, tag_id) " +
+                        "VALUES (%s, %s) ON CONFLICT DO NOTHING", (id, tag_id))
 
 
 def main():

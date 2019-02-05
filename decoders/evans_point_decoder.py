@@ -62,7 +62,7 @@ class EvansPointDecoder(PointDecoder):
 
     @staticmethod
     def decode_building_type(attr_dict):
-        return "residential"
+        return "Residential"
 
     @staticmethod
     def decode_device_type(attr_dict):
