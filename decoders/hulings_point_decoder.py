@@ -35,10 +35,6 @@ class HulingsPointDecoder(PointDecoder):
         return None
 
     @staticmethod
-    def decode_units(attr_dict):
-        return None
-
-    @staticmethod
     def decode_building_type(attr_dict):
         return "Academic"
 

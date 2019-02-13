@@ -47,19 +47,6 @@ class BoliouPointDecoder(PointDecoder):
         return None
 
     @staticmethod
-    def decode_units(attr_dict):
-        unit_map = {
-            'CFM': 'cubic feet per minute',
-            'DEG F': 'degrees fahrenheit',
-            'PCT': 'percent open',
-            'SQ. FT': 'square feet'}
-
-        if 'Engineering Unit' in attr_dict:
-            return unit_map.get(attr_dict['Engineering Units'][0])
-
-        return None
-
-    @staticmethod
     def decode_building_type(attr_dict):
         return "Academic"
 

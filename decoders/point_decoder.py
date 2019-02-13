@@ -39,7 +39,52 @@ class PointDecoder:
 
     @staticmethod
     def decode_units(attr_dict):
-        return None
+        unit_map = {'DEG F': {'measurement': 'temperature',
+                              'unit': 'degrees fahrenheit'},
+                    'PCT': {'measurement': 'proportion open',
+                            'unit': 'percent'},
+                    'PCNT': {'measurement': 'proportion open',
+                             'unit': 'percent'},
+                    'GAL': {'measurement': 'volume',
+                            'unit': 'gallons'},
+                    '% clos': {'measurement': 'proportion closed',
+                               'unit': 'percent'},
+                    '% RH': {'measurement': 'humidity',
+                             'unit': 'percent'},
+                    '%RH': {'measurement': 'humidity',
+                            'unit': 'percent'},
+                    'KW': {'measurement': 'energy',
+                           'unit': 'kilowatt hours'},
+                    'KWH': {'measurement': 'energy',
+                            'unit': 'kilowatt hours'},
+                    'LBM': {'measurement': 'mass',
+                            'unit': 'pounds'},
+                    'LBH': {'measurement': 'pounds per unit time',
+                            'unit': 'pounds per hour'},
+                    'LBM/HR': {'measurement': 'pounds per unit time',
+                               'unit': 'pounds per hour'},
+                    'HZ': {'measurement': 'frequency',
+                           'unit': 'hertz'},
+                    'GPM': {'measurement': 'volume per unit time',
+                            'unit': 'gallons per minute'},
+                    'PSI': {'measurement': 'pressure',
+                            'unit': 'pounds per square inch'},
+                    'PSID': {'measurement': 'pressure differential',
+                             'unit': 'pounds per square inch'},
+                    'CFM': {'measurement': 'volume per unit time',
+                            'unit': 'cubic feet per minute'},
+                    'SQ. FT': {'measurement': 'area',
+                               'unit': 'square feet'},
+                    'HP': {'measurement': 'power',
+                           'unit': 'horsepower'}
+                    }
+
+        if 'Engineering Units' in attr_dict:
+            return unit_map.get(attr_dict['Engineering Units'][0], {'measurement': None,
+                                                                    'unit': None})
+
+        return {'measurement': None,
+                'unit': None}
 
     @staticmethod
     def decode_building_type(attr_dict):

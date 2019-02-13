@@ -25,6 +25,26 @@ class PointDecodingTests(unittest.TestCase):
             for tag in all_tags:
                 self.assertIsNotNone(tag, 'tag was set to none!! shame!')
 
+    def test_units_is_correct_format(self):
+        for point in self.decoded_points:
+            self.assertIn('measurement', point.units)
+            self.assertIn('unit', point.units)
+
+    def test_can_get_unit(self):
+        for point in self.decoded_points:
+            point.get_unit()
+
+    def test_can_get_measurement(self):
+        for point in self.decoded_points:
+            point.get_measurement()
+
+    def test_floor_is_int_or_none(self):
+        for point in self.decoded_points:
+            self.assertTrue(isinstance(point.room_floor, (type(None), int)))
+
+    def test_room_is_str_or_none(self):
+        for point in self.decoded_points:
+            self.assertTrue(isinstance(point.room_name, (type(None), str)))
 
 if __name__ == '__main__':
     unittest.main()
