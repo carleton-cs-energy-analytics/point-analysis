@@ -17,7 +17,6 @@ def try_cast_int(s):
         return None
 
 
-
 def execute_and_commit(query, vars):
     """Runs the given query on the database, then commits the database connection.
 
@@ -28,6 +27,17 @@ def execute_and_commit(query, vars):
         curs.execute(query, vars)
         CONN.commit()
 
+
+def get_id_of_unit(unit, measurement):
+    with CONN.cursor() as curs:
+        query = "SELECT " + "value_unit_id FROM " + "value_units" + " WHERE unit = %s AND measurement = %s"
+        vars = (unit, measurement)
+        curs.execute(query, vars)
+        results = curs.fetchall()
+        if len(results) == 0:
+            return None
+        else:
+            return results[0][0]
 
 def get_id_of(table, name, building_id=None, room_id=None):
     with CONN.cursor() as curs:
@@ -89,31 +99,31 @@ def import_point(points):
         if value_type_id is None:
             raise Exception("value_type of name %s not found" % point.value_type)
 
-        value_units_id = None  # get_id_of("value_units", point.units)
-        # if value_units_id is None:
-        #     raise Exception("value_units of name %s not found" % point.units)
+        value_units_id = get_id_of_unit(point.get_unit(), point.get_measurement())
+        if value_units_id is None and point.get_unit() is not None and point.get_measurement() is not None:
+            raise Exception("value_units of unit %s  and measurement %s not found" % (point.get_unit(), point.get_measurement()))
 
-        execute_and_commit("""
+    execute_and_commit("""
                         INSERT INTO points (name, device_id, value_type_id, value_unit_id) VALUES
                         (%s, %s, %s, %s)
                         """, (point.point_name, device_id, value_type_id, value_units_id))
 
-        point_id = get_id_of("points", point.point_name)
+    point_id = get_id_of("points", point.point_name)
 
-        for (table, id, tags) in [('buildings', building_id, point.get_building_tags()),
-                                  ('rooms', room_id, point.get_room_tags()),
-                                  ('devices', device_id, point.get_device_tags()),
-                                  ('points', point_id, point.get_point_tags())]:
-            for tag in tags:
-                if tag is not None:
+    for (table, id, tags) in [('buildings', building_id, point.get_building_tags()),
+                              ('rooms', room_id, point.get_room_tags()),
+                              ('devices', device_id, point.get_device_tags()),
+                              ('points', point_id, point.get_point_tags())]:
+        for tag in tags:
+            if tag is not None:
+                tag_id = get_id_of("tags", tag)
+                if tag_id is None:
+                    execute_and_commit("""INSERT INTO tags (name) VALUES (%s)""", (tag,))
                     tag_id = get_id_of("tags", tag)
-                    if tag_id is None:
-                        execute_and_commit("""INSERT INTO tags (name) VALUES (%s)""", (tag,))
-                        tag_id = get_id_of("tags", tag)
 
-                    execute_and_commit(
-                        "INSERT INTO " + table + "_tags (" + table[:-1] + "_id, tag_id) " +
-                        "VALUES (%s, %s) ON CONFLICT DO NOTHING", (id, tag_id))
+                execute_and_commit(
+                    "INSERT INTO " + table + "_tags (" + table[:-1] + "_id, tag_id) " +
+                    "VALUES (%s, %s) ON CONFLICT DO NOTHING", (id, tag_id))
 
 
 def main():
