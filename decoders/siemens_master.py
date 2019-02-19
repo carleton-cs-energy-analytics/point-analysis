@@ -13,6 +13,7 @@ from decoders.point import Point
 from decoders.point_decoder import PointDecoder
 from decoders.evans_point_decoder import EvansPointDecoder
 from decoders.hulings_point_decoder import HulingsPointDecoder
+from decoders.override_point_decoder import OverridePointDecoder
 
 # maps building prefixes to building subclass decoders
 BUILDING_PREFIX_MAP = {'EV': EvansPointDecoder,
@@ -23,9 +24,13 @@ BUILDING_PREFIX_MAP = {'EV': EvansPointDecoder,
                        # 'HULLINGS': HulingsPointDecoder,
                        }
 
-DECODED_BUILDINGS_SET = {'Evans',
-                         'Boliou',
-                         'Hulings'}
+OVERRIDE_POINTNAME_SET = {'STHS.HWRT',
+                          'STHS.HWST',
+                          'SEV.HX1.HW',
+                          'MCHWRT',
+                          'EV.HX2.HWR',
+                          'SHHWRT',
+                          'SHHWST'}
 
 
 def get_point_object(name, point_attributes):
@@ -34,16 +39,18 @@ def get_point_object(name, point_attributes):
     :param point_attributes: attribute dictionary for point
     :return: Point object
     '''
-    prefix = get_prefix(name)  # get prefix of point name
-    building_decoder_class = get_building_decoder(prefix)  # class that corresponds to building mapping
+    building_decoder_class = get_building_decoder(name)  # class that corresponds to building mapping
     return Point(point_attributes, building_decoder_class)
 
 
-def get_building_decoder(prefix):
+def get_building_decoder(name):
     '''
     :param prefix: prefix of point name
     :return:  name of subclass that corresponds to the building of a given point prefix
     '''
+    if name in OVERRIDE_POINTNAME_SET:
+        return OverridePointDecoder
+    prefix = get_prefix(name)  # get prefix of point name
     return BUILDING_PREFIX_MAP.get(prefix, PointDecoder)
 
 
@@ -65,5 +72,6 @@ def get_points():
         points = json.loads(f.read())  # read point dictionary from points.json
 
     points_list = [get_point_object(name, point) for name, point in points.items()]  # list of point objects
-    filtered_by_building = [point for point in points_list if point.building_name in DECODED_BUILDINGS_SET]
-    return filtered_by_building
+    decoded_points_list = [point for point in points_list if
+                           point.building_name or point.point_name in OVERRIDE_POINTNAME_SET]
+    return decoded_points_list
