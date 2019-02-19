@@ -103,27 +103,27 @@ def import_point(points):
         if value_units_id is None and point.get_unit() is not None and point.get_measurement() is not None:
             raise Exception("value_units of unit %s  and measurement %s not found" % (point.get_unit(), point.get_measurement()))
 
-    execute_and_commit("""
-                        INSERT INTO points (name, device_id, value_type_id, value_unit_id) VALUES
-                        (%s, %s, %s, %s)
-                        """, (point.point_name, device_id, value_type_id, value_units_id))
+        execute_and_commit("""
+                            INSERT INTO points (name, device_id, value_type_id, value_unit_id) VALUES
+                            (%s, %s, %s, %s)
+                            """, (point.point_name, device_id, value_type_id, value_units_id))
 
-    point_id = get_id_of("points", point.point_name)
+        point_id = get_id_of("points", point.point_name)
 
-    for (table, id, tags) in [('buildings', building_id, point.get_building_tags()),
-                              ('rooms', room_id, point.get_room_tags()),
-                              ('devices', device_id, point.get_device_tags()),
-                              ('points', point_id, point.get_point_tags())]:
-        for tag in tags:
-            if tag is not None:
-                tag_id = get_id_of("tags", tag)
-                if tag_id is None:
-                    execute_and_commit("""INSERT INTO tags (name) VALUES (%s)""", (tag,))
+        for (table, id, tags) in [('buildings', building_id, point.get_building_tags()),
+                                  ('rooms', room_id, point.get_room_tags()),
+                                  ('devices', device_id, point.get_device_tags()),
+                                  ('points', point_id, point.get_point_tags())]:
+            for tag in tags:
+                if tag is not None:
                     tag_id = get_id_of("tags", tag)
+                    if tag_id is None:
+                        execute_and_commit("""INSERT INTO tags (name) VALUES (%s)""", (tag,))
+                        tag_id = get_id_of("tags", tag)
 
-                execute_and_commit(
-                    "INSERT INTO " + table + "_tags (" + table[:-1] + "_id, tag_id) " +
-                    "VALUES (%s, %s) ON CONFLICT DO NOTHING", (id, tag_id))
+                    execute_and_commit(
+                        "INSERT INTO " + table + "_tags (" + table[:-1] + "_id, tag_id) " +
+                        "VALUES (%s, %s) ON CONFLICT DO NOTHING", (id, tag_id))
 
 
 def main():
