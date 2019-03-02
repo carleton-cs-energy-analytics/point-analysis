@@ -1,5 +1,5 @@
 '''
-    Miaoye Que, Last Updated Jan 21, 2019
+    Miaoye Que, Last Updated Mar 22, 2019
     Decodes point data in Boliou
 '''
 
@@ -24,8 +24,10 @@ class BoliouPointDecoder(PointDecoder):
 
     @staticmethod
     def decode_room_name(attr_dict):
-        sub_names = attr_dict["Point Name"][0].split(':')
-        location_name = sub_names[0]
+        location_name = ""
+        if ":" in attr_dict["Point Name"][0]:
+            sub_names = attr_dict["Point Name"][0].split(':')
+            location_name = sub_names[0]
         location_units = location_name.split('.')
         if len(location_units) == 4:
             room_name = location_units[3]
@@ -36,8 +38,10 @@ class BoliouPointDecoder(PointDecoder):
 
     @staticmethod
     def decode_room_floor(attr_dict):
-        sub_names = attr_dict["Point Name"][0].split(':')
-        split0 = sub_names[0]
+        split0 = ""
+        if ":" in attr_dict["Point Name"][0]:
+            sub_names = attr_dict["Point Name"][0].split(':')
+            split0 = sub_names[0]
         if ".1." in split0:
             return "First"
         elif "FIRST" in split0:
@@ -52,8 +56,10 @@ class BoliouPointDecoder(PointDecoder):
 
     @staticmethod
     def decode_point_type(attr_dict):
-        sub_names = attr_dict["Point Name"][0].split(':')
-        split1 = sub_names[1]
+        split1 = ""
+        if ":" in attr_dict["Point Name"][0]:
+            sub_names = attr_dict["Point Name"][0].split(':')
+            split1 = sub_names[1]
         if "AIR VOLUME" in split1:
             return "Air Volume"
         elif "AUX TEMP" in split1:
