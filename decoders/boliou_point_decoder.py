@@ -43,11 +43,11 @@ class BoliouPointDecoder(PointDecoder):
             sub_names = attr_dict["Point Name"][0].split(':')
             split0 = sub_names[0]
         if ".1." in split0:
-            return "First"
+            return 1
         elif "FIRST" in split0:
-            return "First"
+            return 1
         elif "GND" in split0:
-            return "Ground"
+            return 0
         return None
 
     @staticmethod
