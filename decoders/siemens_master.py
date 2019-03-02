@@ -74,6 +74,6 @@ def get_points():
         points = json.loads(f.read())  # read point dictionary from points.json
 
     points_list = [get_point_object(name, point) for name, point in points.items()]  # list of point objects
-    # decoded_points_list = [point for point in points_list if
-    #                        point.building_name or point.point_name in OVERRIDE_POINTNAME_SET]
-    return points_list
+    decoded_points_list = [point for point in points_list if
+                           point.building_name or point.point_name in OVERRIDE_POINTNAME_SET]
+    return decoded_points_list
