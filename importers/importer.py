@@ -11,9 +11,7 @@ CONN = psycopg2.connect(host=os.environ.get('DATABASE_HOST') or '',
 def try_cast_int(s):
     try:
         return int(s)
-    except ValueError:
-        return None
-    except TypeError:
+    except (ValueError, TypeError):
         return None
 
 
@@ -29,8 +27,9 @@ def execute_and_commit(query, vars):
 
 
 def get_id_of_unit(unit, measurement):
+    """Queries the database for the ID of the value_unit with the given unit and measurement"""
     with CONN.cursor() as curs:
-        query = "SELECT " + "value_unit_id FROM " + "value_units" + " WHERE unit = %s AND measurement = %s"
+        query = "SELECT value_unit_id FROM value_units WHERE unit = %s AND measurement = %s"
         vars = (unit, measurement)
         curs.execute(query, vars)
         results = curs.fetchall()
@@ -39,7 +38,11 @@ def get_id_of_unit(unit, measurement):
         else:
             return results[0][0]
 
+
 def get_id_of(table, name, building_id=None, room_id=None):
+    """Queries the database for the ID of the row in the given table with the given name
+    If a building_id or room_id are given, it is added as requirements to the WHERE clause.
+    """
     with CONN.cursor() as curs:
         query = "SELECT " + table[:-1] + "_id FROM " + table + " WHERE name = %s"
         vars = (name,)
@@ -59,7 +62,7 @@ def get_id_of(table, name, building_id=None, room_id=None):
 
 def import_point(points):
     for point in points:
-        point.building_name = point.building_name or "UnID'd Building"
+        point.building_name = point.building_name or "UnID'd Building"  # UnID'd := Unidentified
         building_id = get_id_of("buildings", point.building_name)
         if building_id is None:
             execute_and_commit("""INSERT INTO buildings (name) VALUES (%s)""",
@@ -101,12 +104,14 @@ def import_point(points):
 
         value_units_id = get_id_of_unit(point.get_unit(), point.get_measurement())
         if value_units_id is None and point.get_unit() is not None and point.get_measurement() is not None:
-            raise Exception("value_units of unit %s  and measurement %s not found" % (point.get_unit(), point.get_measurement()))
+            raise Exception("value_units of unit %s and measurement %s not found"
+                            % (point.get_unit(), point.get_measurement()))
 
-        execute_and_commit("""
-                            INSERT INTO points (name, device_id, value_type_id, value_unit_id) VALUES
-                            (%s, %s, %s, %s)
-                            """, (point.point_name, device_id, value_type_id, value_units_id))
+        execute_and_commit(
+            """
+            INSERT INTO points (name, device_id, value_type_id, value_unit_id) 
+            VALUES(%s, %s, %s, %s)
+            """, (point.point_name, device_id, value_type_id, value_units_id))
 
         point_id = get_id_of("points", point.point_name)
 
