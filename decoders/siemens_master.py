@@ -70,10 +70,15 @@ def get_prefix(point_name):
 
 
 def get_points():
+    """
+    :return: List of all the decoded points. This is where to change which points are allowed to be
+    imported, and which aren't.
+    """
     with open('./data/points.json') as f:
         points = json.loads(f.read())  # read point dictionary from points.json
 
     points_list = [get_point_object(name, point) for name, point in points.items()]  # list of point objects
+    # @TODO Only decodes points with building name decoded or in override set. Change if this isn't wanted!
     decoded_points_list = [point for point in points_list if
                            point.building_name or point.point_name in OVERRIDE_POINTNAME_SET]
     return decoded_points_list
