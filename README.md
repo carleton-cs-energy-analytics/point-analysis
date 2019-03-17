@@ -6,6 +6,8 @@ This should be very infrequent, only occurring when renovations or new construct
 In this case, we need to update points.json. 
 1.  Update definition files in siemens-point-descriptions with the new definitions
 2. run `python3 analysis-tools/definitions2json.py`
+## Updating point name acronyms
+We have only decoded the device acronyms within Boliou and Evans. <a href="https://www.downloads.siemens.com/download-center/Download.aspx?pos=download&fct=getasset&id1=A6V10435967">Siemens documentation</a> is a useful resource to refer to while creating more mappings between device acronyms and actual device names.
 
 
 ## Importing Points to DB
