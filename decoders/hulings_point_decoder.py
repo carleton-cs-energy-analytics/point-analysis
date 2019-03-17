@@ -5,7 +5,10 @@ import re
 
 
 class HulingsPointDecoder(PointDecoder):
-
+    """
+    Decoder for Hulings points.
+    @TODO Not currently in use.
+    """
     @staticmethod
     def decode_building_name(attr_dict):
         return "Hulings"

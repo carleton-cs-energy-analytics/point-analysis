@@ -1,6 +1,9 @@
 
 
 class PointDecoder:
+    """
+    A set of static methods to decode parts of a point, that can be overridden by sub-classes.
+    """
     @staticmethod
     def decode_point_name(attr_dict):
         return attr_dict["Point System Name"][0]
@@ -113,6 +116,11 @@ class PointDecoder:
 
     @staticmethod
     def get_delimited_pointname(attr_dict):
+        """
+        returns a list of all the sections of the point name, split on all the possible delimiters.
+        :param attr_dict:
+        :return:
+        """
         name = PointDecoder.decode_point_name(attr_dict)
         simplified_name = name.replace(';', '.').replace(':', '.').replace('-', '.')
         return simplified_name.split('.')

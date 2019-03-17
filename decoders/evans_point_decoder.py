@@ -4,6 +4,9 @@ from decoders.point_decoder import PointDecoder
 
 
 class EvansPointDecoder(PointDecoder):
+    """
+    Decoder for Evans points
+    """
 
     @staticmethod
     def decode_building_name(attr_dict):

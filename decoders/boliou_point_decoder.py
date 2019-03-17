@@ -9,6 +9,9 @@ from decoders.point_decoder import PointDecoder
 
 
 class BoliouPointDecoder(PointDecoder):
+    """
+    Decoder for Boliou points
+    """
 
     @staticmethod
     def decode_building_name(attr_dict):
