@@ -61,6 +61,13 @@ def get_id_of(table, name, building_id=None, room_id=None):
 
 
 def import_point(points):
+    """
+    takes in a list of point objects, and imports the necessary pieces of these into the
+    database.
+
+    :param points: list of point objects (decoded)
+    :return: None
+    """
     for point in points:
         point.building_name = point.building_name or "UnID'd Building"  # UnID'd := Unidentified
         building_id = get_id_of("buildings", point.building_name)
